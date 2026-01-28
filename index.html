@@ -4,7 +4,6 @@
 <title>Калькулятор ленточного фундамента</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-/* Базовый reset и мобильная адаптация */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f2f2f2;-webkit-text-size-adjust:100%;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden}
 .container{max-width:520px;width:100%;background:#fff;padding:16px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);transition:transform 0.3s ease}
@@ -147,7 +146,7 @@ function sendToMax(){
   const rebarWork = totalLength * 8 * 25;
   const totalWork = transportFormwork + trenchWork + gravelWork + concreteWork + rebarWork;
 
-  const message = `Расчёт ленточного фундамента:\nМатериалы:\nБетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽\nПодсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽\nАрматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽\nРамки: ${frames} шт\nОпалубка: ${costFormwork.toFixed(0)} ₽\nИтого материалы: ${totalMaterials.toFixed(0)} ₽\n\nСтоимость работ:\nКопка траншеи: ${trenchWork.toFixed(0)} ₽\nТранспортировка опалубки: ${transportFormwork} ₽\nПодсыпка: ${gravelWork.toFixed(0)} ₽\nЗаливка бетона: ${concreteWork.toFixed(0)} ₽\nВязка арматуры: ${rebarWork.toFixed(0)} ₽\nИтого работы: ${totalWork.toFixed(0)} ₽`;
+  const message = `Привет! Я сделал расчёт ленточного фундамента для вас:\n\nМатериалы:\nБетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽\nПодсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽\nАрматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽\nРамки: ${frames} шт\nОпалубка: ${costFormwork.toFixed(0)} ₽\nИтого материалы: ${totalMaterials.toFixed(0)} ₽\n\nСтоимость работ:\nКопка траншеи: ${trenchWork.toFixed(0)} ₽\nТранспортировка опалубки: ${transportFormwork} ₽\nПодсыпка: ${gravelWork.toFixed(0)} ₽\nЗаливка бетона: ${concreteWork.toFixed(0)} ₽\nВязка арматуры: ${rebarWork.toFixed(0)} ₽\nИтого работы: ${totalWork.toFixed(0)} ₽`;
   const url = `https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
 }
