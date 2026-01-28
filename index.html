@@ -12,7 +12,7 @@ h1{text-align:center;font-size:20px;margin-bottom:10px}
 label{display:block;margin-top:12px;font-weight:600;font-size:14px}
 input,select{width:100%;padding:12px;margin-top:6px;font-size:16px;border-radius:8px;border:1px solid #ccc;appearance:none;-webkit-appearance:none}
 select{background:#fff}
-button{margin-top:16px;width:100%;padding:14px;font-size:17px;background:#27ae60;color:#fff;border:none;border-radius:10px;transition:transform 0.1s}
+button{margin-top:16px;width:100%;padding:16px;font-size:18px;background:#27ae60;color:#fff;border:none;border-radius:12px;transition:transform 0.1s;cursor:pointer}
 button:active{transform:scale(0.98)}
 .result{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.95);padding:20px;box-sizing:border-box;display:none;z-index:1000;overflow-y:auto;transition:opacity 0.3s ease, transform 0.3s ease;opacity:0;transform:translateY(30px);text-align:center}
 .result.show{display:block;opacity:1;transform:translateY(0)}
@@ -26,7 +26,7 @@ button:active{transform:scale(0.98)}
 </head>
 <body>
 <div class="container" id="mainContainer">
-<h1>Ленточный фундамент</h1>
+<h1>Калькулятор ленточного фундамента</h1>
 
 <label>Периметр фундамента (м)
 <input id="perimeter" type="number" step="0.1" placeholder="Например: 40"></label>
@@ -64,9 +64,7 @@ button:active{transform:scale(0.98)}
   Аренда опалубки (400 ₽ / пог. м)
 </label>
 
-<button onclick="calc()">Рассчитать материалы</button>
-<button onclick="calcWork()">Рассчёт стоимости работ</button>
-
+<button onclick="calcAll()">Рассчитать материалы и стоимость работ</button>
 <div class="note">* Расчёт ориентировочный</div>
 </div>
 
@@ -99,9 +97,11 @@ function hideResult(){
   document.getElementById('mainContainer').style.display = 'block';
 }
 
-function calc(){
+function calcAll(){
   const {P,W,H,partitionLength,partitionWidth,priceConcrete,formwork} = getValues();
   if(!P||!W||!H){alert('Заполните все поля');return;}
+
+  // Материалы
   const volumeConcrete = P*W*H + partitionLength*partitionWidth*H;
   const costConcrete = volumeConcrete * priceConcrete;
   const gravelLayer = 0.3;
@@ -113,22 +113,18 @@ function calc(){
   const costFrames = frames * 50;
   let costFormwork = 0;
   if(formwork){ costFormwork = (P + partitionLength) * 400; }
-  const total = costConcrete + costGravel + costRebar + costFrames + costFormwork;
-  showResult(`<b>Материалы:</b><br><br>🧱 Бетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽<br>🪨 Подсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽<br>🔩 Арматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽<br>🧲 Рамки: ${frames} шт — ${costFrames.toFixed(0)} ₽<br>🧱 Опалубка: ${costFormwork.toFixed(0)} ₽<br><br><b>💰 Итого материалы: ${total.toFixed(0)} ₽</b>`);
-}
+  const totalMaterials = costConcrete + costGravel + costRebar + costFrames + costFormwork;
 
-function calcWork(){
-  const {P,partitionLength,W,H} = getValues();
-  if(!P||!W||!H){alert('Заполните основные размеры');return;}
+  // Стоимость работ
   const totalLength = P + partitionLength;
-  const volumeConcrete = P*W*H + partitionLength*W*H;
   const transportFormwork = 4000;
   const trenchWork = totalLength * 200;
   const gravelWork = totalLength * 350;
   const concreteWork = volumeConcrete * 2000;
   const rebarWork = totalLength * 8 * 25;
   const totalWork = transportFormwork + trenchWork + gravelWork + concreteWork + rebarWork;
-  showResult(`<b>Стоимость работ:</b><br><br>⛏ Копка траншеи: ${trenchWork.toFixed(0)} ₽<br>🚚 Транспортировка опалубки: ${transportFormwork} ₽<br>🪨 Подсыпка: ${gravelWork.toFixed(0)} ₽<br>🧱 Заливка бетона: ${concreteWork.toFixed(0)} ₽<br>🔩 Вязка арматуры: ${rebarWork.toFixed(0)} ₽<br><br><b>💰 Итого работы: ${totalWork.toFixed(0)} ₽</b>`);
+
+  showResult(`<b>Материалы:</b><br>🧱 Бетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽<br>🪨 Подсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽<br>🔩 Арматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽<br>🧲 Рамки: ${frames} шт — ${costFrames.toFixed(0)} ₽<br>🧱 Опалубка: ${costFormwork.toFixed(0)} ₽<br><b>💰 Итого материалы: ${totalMaterials.toFixed(0)} ₽</b><br><br><b>Стоимость работ:</b><br>⛏ Копка траншеи: ${trenchWork.toFixed(0)} ₽<br>🚚 Транспортировка опалубки: ${transportFormwork} ₽<br>🪨 Подсыпка: ${gravelWork.toFixed(0)} ₽<br>🧱 Заливка бетона: ${concreteWork.toFixed(0)} ₽<br>🔩 Вязка арматуры: ${rebarWork.toFixed(0)} ₽<br><b>💰 Итого работы: ${totalWork.toFixed(0)} ₽</b>`);
 }
 </script>
 </body>
