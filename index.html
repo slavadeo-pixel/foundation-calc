@@ -23,6 +23,8 @@ button:hover{background:#2ecc71}
 .checkbox input{display:none}
 .checkbox span{width:22px;height:22px;border:2px solid #27ae60;border-radius:6px;display:inline-block;position:relative;flex-shrink:0}
 .checkbox input:checked + span::after{content:'';position:absolute;left:5px;top:1px;width:6px;height:12px;border:solid #27ae60;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.max-btn{background:#4a7cff !important}
+.max-btn:hover{background:#3b6df0 !important}
 </style>
 </head>
 <body>
@@ -86,7 +88,7 @@ function getValues(){
 
 function showResult(html){
   const result = document.getElementById('result');
-  result.innerHTML = html + '<br><button onclick="hideResult()">Вернуться обратно</button>' + '<br><button onclick="sendToMax()">Сохранить и отправить в Max</button>';
+  result.innerHTML = html + '<br><button onclick="hideResult()">Вернуться обратно</button>' + '<br><button class="max-btn" onclick="sendToMax()">Связаться в Max</button>';;
   result.classList.add('show');
   document.getElementById('mainContainer').style.display = 'none';
 }
@@ -108,7 +110,7 @@ function calcAll(){
   const volumeGravel = P*W*gravelLayer + partitionLength*partitionWidth*gravelLayer;
   const costGravel = volumeGravel * 250;
   const rebarLength = P*8 + partitionLength*8;
-  const costRebar = rebarLength * 38;
+  const costRebar = rebarLength * 46;
   const frames = Math.ceil(P*4 + partitionLength*4);
   let costFormwork = 0;
   if(formwork){ costFormwork = (P + partitionLength) * 400; }
@@ -118,8 +120,8 @@ function calcAll(){
   const transportFormwork = 4000;
   const trenchWork = totalLength * 200;
   const gravelWork = totalLength * 350;
-  const concreteWork = volumeConcrete * 2000;
-  const rebarWork = totalLength * 8 * 25;
+  const concreteWork = volumeConcrete * 2500;
+  const rebarWork = totalLength * 8 * 35;
   const totalWork = transportFormwork + trenchWork + gravelWork + concreteWork + rebarWork;
 
   showResult(`<b>Материалы:</b><br>🧱 Бетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽<br>🪨 Подсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽<br>🔩 Арматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽<br>🧲 Рамки: ${frames} шт — ${frames*50} ₽<br>🧱 Опалубка: ${costFormwork.toFixed(0)} ₽<br><b>💰 Итого материалы: ${totalMaterials.toFixed(0)} ₽</b><br><br><b>Стоимость работ:</b><br>⛏ Копка траншеи: ${trenchWork.toFixed(0)} ₽<br>🚚 Транспортировка опалубки: ${transportFormwork} ₽<br>🪨 Подсыпка: ${gravelWork.toFixed(0)} ₽<br>🧱 Заливка бетона: ${concreteWork.toFixed(0)} ₽<br>🔩 Вязка арматуры: ${rebarWork.toFixed(0)} ₽<br><b>💰 Итого работы: ${totalWork.toFixed(0)} ₽</b>`);
@@ -133,7 +135,7 @@ function sendToMax(){
   const volumeGravel = P*W*gravelLayer + partitionLength*partitionWidth*gravelLayer;
   const costGravel = volumeGravel * 250;
   const rebarLength = P*8 + partitionLength*8;
-  const costRebar = rebarLength * 38;
+  const costRebar = rebarLength * 46;
   const frames = Math.ceil(P*4 + partitionLength*4);
   let costFormwork = 0;
   if(formwork){ costFormwork = (P + partitionLength) * 400; }
@@ -142,8 +144,8 @@ function sendToMax(){
   const transportFormwork = 4000;
   const trenchWork = totalLength * 200;
   const gravelWork = totalLength * 350;
-  const concreteWork = volumeConcrete * 2000;
-  const rebarWork = totalLength * 8 * 25;
+  const concreteWork = volumeConcrete * 2500;
+  const rebarWork = totalLength * 8 * 35;
   const totalWork = transportFormwork + trenchWork + gravelWork + concreteWork + rebarWork;
 
   const message = `Привет! Я сделал расчёт ленточного фундамента для вас:\n\nМатериалы:\nБетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽\nПодсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽\nАрматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽\nРамки: ${frames} шт\nОпалубка: ${costFormwork.toFixed(0)} ₽\nИтого материалы: ${totalMaterials.toFixed(0)} ₽\n\nСтоимость работ:\nКопка траншеи: ${trenchWork.toFixed(0)} ₽\nТранспортировка опалубки: ${transportFormwork} ₽\nПодсыпка: ${gravelWork.toFixed(0)} ₽\nЗаливка бетона: ${concreteWork.toFixed(0)} ₽\nВязка арматуры: ${rebarWork.toFixed(0)} ₽\nИтого работы: ${totalWork.toFixed(0)} ₽`;
