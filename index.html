@@ -104,9 +104,9 @@ function getValues(){
 function showResult(html){
   const result = document.getElementById('result');
   result.innerHTML = html
-    + '<br><a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank" class="max-btn">🔧 Контакты строительных бригад и техники в Max</a>'
     + '<br><button onclick="openLeadForm()">📞 Получить консультацию</button>'
-    + '<br><button onclick="hideResult()">Вернуться обратно</button>';
+    + '<br><a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank" class="max-btn">👷 Бригады и техника в Max</a>'
+    + '<br><button onclick="hideResult()">Вернуться обратно</button>';</button>';
   result.classList.add('show');
   document.getElementById('mainContainer').style.display = 'none';
 }{
@@ -150,8 +150,17 @@ function calcAll(){
   showResult(`<b>Материалы:</b><br>🧱 Бетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽<br>🪨 Подсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽<br>🔩 Арматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽<br>🧲 Рамки: ${frames} шт — ${frames*50} ₽<br>🧱 Опалубка: ${costFormwork.toFixed(0)} ₽<br><b>💰 Итого материалы: ${totalMaterials.toFixed(0)} ₽</b><br><br><b>Стоимость работ:</b><br>⛏ Копка траншеи: ${trenchWork.toFixed(0)} ₽<br>🚚 Транспортировка опалубки: ${transportFormwork} ₽<br>🪨 Подсыпка: ${gravelWork.toFixed(0)} ₽<br>🧱 Заливка бетона: ${concreteWork.toFixed(0)} ₽<br>🔩 Вязка арматуры: ${rebarWork.toFixed(0)} ₽<br><b>💰 Итого работы: ${totalWork.toFixed(0)} ₽</b>`);
 }
 
-function openLeadForm(){document.getElementById('leadForm').style.display='block'}
-function closeLeadForm(){document.getElementById('leadForm').style.display='none'}
+function openLeadForm(){
+  document.getElementById('result').style.display='none';
+  const lf=document.getElementById('leadForm');
+  lf.style.display='block';
+  lf.classList.add('show');
+}
+function closeLeadForm(){
+  const lf=document.getElementById('leadForm');
+  lf.classList.remove('show');
+  setTimeout(()=>{lf.style.display='none';document.getElementById('result').style.display='block';},300);
+}
 
 function sendLead(){
   const name=document.getElementById('leadName').value;
