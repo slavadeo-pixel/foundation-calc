@@ -5,173 +5,127 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f2f2f2;-webkit-text-size-adjust:100%;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden}
-.container{max-width:520px;width:100%;background:#fff;padding:16px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);transition:transform 0.3s ease}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f2f2f2;min-height:100vh;display:flex;justify-content:center;align-items:center}
+.container{max-width:520px;width:100%;background:#fff;padding:16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
 h1{text-align:center;font-size:20px;margin-bottom:10px}
 label{display:block;margin-top:12px;font-weight:600;font-size:14px}
-input,select{width:100%;padding:12px;margin-top:6px;font-size:16px;border-radius:8px;border:1px solid #ccc;appearance:none;-webkit-appearance:none}
-select{background:#fff}
-button{margin-top:16px;width:100%;padding:16px;font-size:18px;background:#27ae60;color:#fff;border:none;border-radius:12px;transition:transform 0.1s, background 0.3s;cursor:pointer}
+input,select{width:100%;padding:12px;margin-top:6px;font-size:16px;border-radius:8px;border:1px solid #ccc}
+button{margin-top:16px;width:100%;padding:16px;font-size:18px;background:#27ae60;color:#fff;border:none;border-radius:12px;cursor:pointer}
 button:active{transform:scale(0.98)}
-button:hover{background:#2ecc71}
-.result{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.95);padding:20px;box-sizing:border-box;display:none;z-index:1000;overflow-y:auto;transition:opacity 0.3s ease, transform 0.3s ease;opacity:0;transform:translateY(30px);text-align:center}
-.result.show{display:block;opacity:1;transform:translateY(0)}
-.result button{background:#2980b9;margin-top:20px;width:80%;padding:14px;font-size:16px;border-radius:10px;transition:transform 0.1s, background 0.3s}
-.result button:hover{background:#3498db}
+.result{position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;padding:20px;display:none;overflow-y:auto;z-index:1000;text-align:center}
+.result.show{display:block}
+.max-btn{display:block;margin-top:20px;padding:16px;background:#4a7cff;color:#fff;text-decoration:none;border-radius:12px;font-size:18px}
 .note{font-size:12px;color:#777;margin-top:8px;text-align:center}
-.checkbox{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:14px;font-weight:600;cursor:pointer}
-.checkbox input{display:none}
-.checkbox span{width:22px;height:22px;border:2px solid #27ae60;border-radius:6px;display:inline-block;position:relative;flex-shrink:0}
-.checkbox input:checked + span::after{content:'';position:absolute;left:5px;top:1px;width:6px;height:12px;border:solid #27ae60;border-width:0 3px 3px 0;transform:rotate(45deg)}
-.max-btn{background:#4a7cff !important}
-.max-btn:hover{background:#3b6df0 !important}
-.max-btn{display:block;text-align:center;text-decoration:none;background:#4a7cff;color:#fff;padding:16px;border-radius:12px;font-size:18px;margin-top:20px}
-.max-btn:hover{background:#3b6df0}
+.checkbox{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:14px;font-weight:600}
+.checkbox input{width:auto}
 </style>
 </head>
 <body>
+
 <div class="container" id="mainContainer">
 <h1>Калькулятор ленточного фундамента</h1>
 
 <label>Периметр фундамента (м)
-<input id="perimeter" type="number" step="0.1" placeholder="Например: 40"></label>
+<input id="perimeter" type="number" step="0.1"></label>
 
 <label>Ширина ленты (м)
-<select id="width">
-  <option value="0.3">0.3 м</option>
-  <option value="0.4" selected>0.4 м</option>
-</select>
-</label>
+<select id="width"><option value="0.3">0.3</option><option value="0.4" selected>0.4</option></select></label>
 
 <label>Высота ленты (м)
-<input id="height" type="number" step="0.1" placeholder="Например: 0.6"></label>
+<input id="height" type="number" step="0.1"></label>
 
 <label>Длина перегородок (м)
-<input id="partitionLengthInput" type="number" step="0.1" placeholder="Например: 10"></label>
+<input id="partitionLength" type="number" step="0.1" value="0"></label>
 
-<label>Ширина перегородки (м)
-<select id="partitionWidth">
-  <option value="0.3">0.3 м</option>
-  <option value="0.4" selected>0.4 м</option>
-</select>
-</label>
+<label>Ширина перегородок (м)
+<select id="partitionWidth"><option value="0.3">0.3</option><option value="0.4" selected>0.4</option></select></label>
 
 <label>Марка бетона
-<select id="concrete">
-<option value="5500">M200 — 5500 ₽/м³</option>
-<option value="6000">M250 — 6000 ₽/м³</option>
-<option value="6500">M300 — 6500 ₽/м³</option>
-</select></label>
+<select id="concrete"><option value="5500">M200 — 5500</option><option value="6000">M250 — 6000</option><option value="6500">M300 — 6500</option></select></label>
 
-<label class="checkbox">
-  <input type="checkbox" id="formwork" checked>
-  <span></span>
-  Аренда опалубки (400 ₽ / пог. м)
-</label>
+<label class="checkbox"><input type="checkbox" id="formwork" checked>Аренда опалубки (400 ₽/м)</label>
 
-<button onclick="calcAll()">Рассчитать материалы и стоимость работ</button>
+<button id="calcButton">Рассчитать</button>
 <div class="note">* Расчёт ориентировочный</div>
 </div>
 
 <div class="result" id="result"></div>
 
-<!-- Форма заявки -->
-<div class="result" id="leadForm" style="display:none">
-  <h2>📞 Получить консультацию</h2>
-  <label>Ваше имя
-    <input id="leadName" type="text" placeholder="Имя">
-  </label>
-  <label>Телефон
-    <input id="leadPhone" type="tel" placeholder="+7...">
-  </label>
-  <button onclick="sendLead()">Отправить заявку</button>
-  <button onclick="closeLeadForm()">Отмена</button>
+<div class="result" id="leadForm">
+<h2>📞 Получить консультацию</h2>
+<input id="leadName" placeholder="Имя">
+<input id="leadPhone" placeholder="Телефон">
+<button id="sendLeadButton">Отправить</button>
+<button id="backLeadButton">Назад</button>
 </div>
 
 <script>
-function getValues(){
-  return {
-    P: +document.getElementById('perimeter').value,
-    W: +document.getElementById('width').value,
-    H: +document.getElementById('height').value,
-    partitionLength: +document.getElementById('partitionLengthInput').value,
-    partitionWidth: +document.getElementById('partitionWidth').value,
-    priceConcrete: +document.getElementById('concrete').value,
-    formwork: document.getElementById('formwork').checked
-  };
+function calcAll(){
+  const P=+document.getElementById('perimeter').value;
+  const W=+document.getElementById('width').value;
+  const H=+document.getElementById('height').value;
+  const pL=+document.getElementById('partitionLength').value;
+  const pW=+document.getElementById('partitionWidth').value;
+  const concretePrice=+document.getElementById('concrete').value;
+  const formworkChecked=document.getElementById('formwork').checked;
+
+  if(!P||!H){alert('Заполните все поля');return;}
+
+  const volume=P*W*H + pL*pW*H;
+  const concreteCost=volume*concretePrice;
+  const gravelCost=(P*W+pL*pW)*0.3*250;
+  const rebarCost=(P+pL)*8*46;
+  const workCost=volume*2500 + (P+pL)*200 + (P+pL)*350 + (P+pL)*8*35 + (formworkChecked?400*(P+pL):0) + 4000;
+
+  showResult(`Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toFixed(0)} ₽<br>Подсыпка: ${gravelCost.toFixed(0)} ₽<br>Арматура: ${rebarCost.toFixed(0)} ₽<br><br><b>Работы: ${workCost.toFixed(0)} ₽</b>`);
 }
 
 function showResult(html){
-  const result = document.getElementById('result');
-  result.innerHTML = html
-    + '<br><button onclick="openLeadForm()">📞 Получить консультацию</button>'
-    + '<br><a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank" class="max-btn">👷 Бригады и техника в Max</a>'
-    + '<br><button onclick="hideResult()">Вернуться обратно</button>';</button>';
+  const result=document.getElementById('result');
+  result.innerHTML=html+
+    '<br><button onclick="openLead()">📞 Получить консультацию</button>'+ 
+    '<a class="max-btn" href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank">👷 Бригады и техника в Max</a>'+ 
+    '<br><button onclick="closeResult()">Назад</button>';
   result.classList.add('show');
-  document.getElementById('mainContainer').style.display = 'none';
-}{
-  const result = document.getElementById('result');
-  result.innerHTML = html + '<br><button onclick="hideResult()">Вернуться обратно</button>' + '<br><a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank" class="max-btn">Вступить в группу Max</a>';;
-  result.classList.add('show');
-  document.getElementById('mainContainer').style.display = 'none';
+  document.getElementById('mainContainer').style.display='none';
 }
 
-function hideResult(){
-  const result = document.getElementById('result');
-  result.classList.remove('show');
-  setTimeout(()=>{result.style.display='none'},300);
-  document.getElementById('mainContainer').style.display = 'block';
+function closeResult(){
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('mainContainer').style.display='block';
 }
 
-function calcAll(){
-  const {P,W,H,partitionLength,partitionWidth,priceConcrete,formwork} = getValues();
-  if(!P||!W||!H){alert('Заполните все поля');return;}
-
-  const volumeConcrete = P*W*H + partitionLength*partitionWidth*H;
-  const costConcrete = volumeConcrete * priceConcrete;
-  const gravelLayer = 0.3;
-  const volumeGravel = P*W*gravelLayer + partitionLength*partitionWidth*gravelLayer;
-  const costGravel = volumeGravel * 250;
-  const rebarLength = P*8 + partitionLength*8;
-  const costRebar = rebarLength * 46;
-  const frames = Math.ceil(P*4 + partitionLength*4);
-  let costFormwork = 0;
-  if(formwork){ costFormwork = (P + partitionLength) * 400; }
-  const totalMaterials = costConcrete + costGravel + costRebar + frames*50 + costFormwork;
-
-  const totalLength = P + partitionLength;
-  const transportFormwork = 4000;
-  const trenchWork = totalLength * 200;
-  const gravelWork = totalLength * 350;
-  const concreteWork = volumeConcrete * 2500;
-  const rebarWork = totalLength * 8 * 35;
-  const totalWork = transportFormwork + trenchWork + gravelWork + concreteWork + rebarWork;
-
-  showResult(`<b>Материалы:</b><br>🧱 Бетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽<br>🪨 Подсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽<br>🔩 Арматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽<br>🧲 Рамки: ${frames} шт — ${frames*50} ₽<br>🧱 Опалубка: ${costFormwork.toFixed(0)} ₽<br><b>💰 Итого материалы: ${totalMaterials.toFixed(0)} ₽</b><br><br><b>Стоимость работ:</b><br>⛏ Копка траншеи: ${trenchWork.toFixed(0)} ₽<br>🚚 Транспортировка опалубки: ${transportFormwork} ₽<br>🪨 Подсыпка: ${gravelWork.toFixed(0)} ₽<br>🧱 Заливка бетона: ${concreteWork.toFixed(0)} ₽<br>🔩 Вязка арматуры: ${rebarWork.toFixed(0)} ₽<br><b>💰 Итого работы: ${totalWork.toFixed(0)} ₽</b>`);
-}
-
-function openLeadForm(){
+function openLead(){
   document.getElementById('result').style.display='none';
-  const lf=document.getElementById('leadForm');
-  lf.style.display='block';
-  lf.classList.add('show');
+  document.getElementById('leadForm').style.display='block';
 }
-function closeLeadForm(){
-  const lf=document.getElementById('leadForm');
-  lf.classList.remove('show');
-  setTimeout(()=>{lf.style.display='none';document.getElementById('result').style.display='block';},300);
+function backToResult(){
+  document.getElementById('leadForm').style.display='none';
+  document.getElementById('result').style.display='block';
 }
-
 function sendLead(){
-  const name=document.getElementById('leadName').value;
   const phone=document.getElementById('leadPhone').value;
-  if(!phone){alert('Укажите телефон');return;}
-  const data={name,phone,date:new Date().toLocaleString()};
-  fetch('https://script.google.com/macros/s/ВАШ_SCRIPT_ID/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  alert('Заявка отправлена! Мы свяжемся с вами.');
-  closeLeadForm();
+  if(!phone){alert('Введите телефон');return;}
+  alert('Заявка отправлена');
+  backToResult();
 }
 
+// Привязка кнопок
+document.getElementById('calcButton').addEventListener('click', calcAll);
+document.getElementById('sendLeadButton').addEventListener('click', sendLead);
+document.getElementById('backLeadButton').addEventListener('click', backToResult);
+
+// Автотест при загрузке
+window.onload=function(){
+  document.getElementById('perimeter').value=10;
+  document.getElementById('width').value=0.4;
+  document.getElementById('height').value=0.5;
+  document.getElementById('partitionLength').value=2;
+  document.getElementById('partitionWidth').value=0.3;
+  document.getElementById('concrete').value=5500;
+  document.getElementById('formwork').checked=true;
+  calcAll();
+};
 </script>
 </body>
 </html>
