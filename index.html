@@ -38,14 +38,6 @@ button:active{transform:scale(0.98)}
 
 <div class="result" id="result"></div>
 
-<div class="result" id="leadForm">
-<h2>📞 Получить консультацию</h2>
-<input id="leadName" placeholder="Имя">
-<input id="leadPhone" placeholder="Телефон">
-<button id="sendLeadButton">Отправить</button>
-<button id="backLeadButton">Назад</button>
-</div>
-
 <script>
 function calcAll(){
   const P=+document.getElementById('perimeter').value;
@@ -70,7 +62,6 @@ function calcAll(){
   <p>Подсыпка: ${gravelCost.toFixed(0)} ₽</p>
   <p>Арматура: ${rebarCost.toFixed(0)} ₽</p>
   <p><b>Стоимость работ: ${workCost.toFixed(0)} ₽</b></p>
-  <button onclick="openLead()">📞 Получить консультацию</button>
   <a class="max-btn" href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank">👷 Бригады и техника в Max</a>
   <br><button onclick="closeResult()">Назад</button>`;
   result.classList.add('show');
@@ -82,25 +73,8 @@ function closeResult(){
   document.getElementById('mainContainer').style.display='block';
 }
 
-function openLead(){
-  document.getElementById('result').style.display='none';
-  document.getElementById('leadForm').style.display='block';
-}
-function backToResult(){
-  document.getElementById('leadForm').style.display='none';
-  document.getElementById('result').style.display='block';
-}
-function sendLead(){
-  const phone=document.getElementById('leadPhone').value;
-  if(!phone){alert('Введите телефон');return;}
-  alert('Заявка отправлена');
-  backToResult();
-}
-
 // Привязка кнопок
 document.getElementById('calcButton').addEventListener('click', calcAll);
-document.getElementById('sendLeadButton').addEventListener('click', sendLead);
-document.getElementById('backLeadButton').addEventListener('click', backToResult);
 </script>
 </body>
 </html>
