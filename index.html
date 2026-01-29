@@ -101,18 +101,6 @@ function sendLead(){
 document.getElementById('calcButton').addEventListener('click', calcAll);
 document.getElementById('sendLeadButton').addEventListener('click', sendLead);
 document.getElementById('backLeadButton').addEventListener('click', backToResult);
-
-// Автотест при загрузке
-window.onload=function(){
-  document.getElementById('perimeter').value=10;
-  document.getElementById('width').value=0.4;
-  document.getElementById('height').value=0.5;
-  document.getElementById('partitionLength').value=2;
-  document.getElementById('partitionWidth').value=0.3;
-  document.getElementById('concrete').value=5500;
-  document.getElementById('formwork').checked=true;
-  calcAll();
-};
 </script>
 </body>
 </html>
