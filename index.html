@@ -75,6 +75,19 @@ button:hover{background:#2ecc71}
 
 <div class="result" id="result"></div>
 
+<!-- Форма заявки -->
+<div class="result" id="leadForm" style="display:none">
+  <h2>📞 Получить консультацию</h2>
+  <label>Ваше имя
+    <input id="leadName" type="text" placeholder="Имя">
+  </label>
+  <label>Телефон
+    <input id="leadPhone" type="tel" placeholder="+7...">
+  </label>
+  <button onclick="sendLead()">Отправить заявку</button>
+  <button onclick="closeLeadForm()">Отмена</button>
+</div>
+
 <script>
 function getValues(){
   return {
@@ -89,6 +102,14 @@ function getValues(){
 }
 
 function showResult(html){
+  const result = document.getElementById('result');
+  result.innerHTML = html
+    + '<br><a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank" class="max-btn">🔧 Контакты строительных бригад и техники в Max</a>'
+    + '<br><button onclick="openLeadForm()">📞 Получить консультацию</button>'
+    + '<br><button onclick="hideResult()">Вернуться обратно</button>';
+  result.classList.add('show');
+  document.getElementById('mainContainer').style.display = 'none';
+}{
   const result = document.getElementById('result');
   result.innerHTML = html + '<br><button onclick="hideResult()">Вернуться обратно</button>' + '<br><a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank" class="max-btn">Вступить в группу Max</a>';;
   result.classList.add('show');
@@ -127,6 +148,19 @@ function calcAll(){
   const totalWork = transportFormwork + trenchWork + gravelWork + concreteWork + rebarWork;
 
   showResult(`<b>Материалы:</b><br>🧱 Бетон: ${volumeConcrete.toFixed(2)} м³ — ${costConcrete.toFixed(0)} ₽<br>🪨 Подсыпка: ${volumeGravel.toFixed(2)} м³ — ${costGravel.toFixed(0)} ₽<br>🔩 Арматура: ${rebarLength.toFixed(1)} м — ${costRebar.toFixed(0)} ₽<br>🧲 Рамки: ${frames} шт — ${frames*50} ₽<br>🧱 Опалубка: ${costFormwork.toFixed(0)} ₽<br><b>💰 Итого материалы: ${totalMaterials.toFixed(0)} ₽</b><br><br><b>Стоимость работ:</b><br>⛏ Копка траншеи: ${trenchWork.toFixed(0)} ₽<br>🚚 Транспортировка опалубки: ${transportFormwork} ₽<br>🪨 Подсыпка: ${gravelWork.toFixed(0)} ₽<br>🧱 Заливка бетона: ${concreteWork.toFixed(0)} ₽<br>🔩 Вязка арматуры: ${rebarWork.toFixed(0)} ₽<br><b>💰 Итого работы: ${totalWork.toFixed(0)} ₽</b>`);
+}
+
+function openLeadForm(){document.getElementById('leadForm').style.display='block'}
+function closeLeadForm(){document.getElementById('leadForm').style.display='none'}
+
+function sendLead(){
+  const name=document.getElementById('leadName').value;
+  const phone=document.getElementById('leadPhone').value;
+  if(!phone){alert('Укажите телефон');return;}
+  const data={name,phone,date:new Date().toLocaleString()};
+  fetch('https://script.google.com/macros/s/ВАШ_SCRIPT_ID/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  alert('Заявка отправлена! Мы свяжемся с вами.');
+  closeLeadForm();
 }
 
 </script>
