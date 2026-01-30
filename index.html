@@ -12,10 +12,7 @@
     input, select { width:100%; padding:8px; font-size:16px; }
     button { width:100%; padding:12px; font-size:18px; background:#2563eb; color:#fff; border:none; border-radius:10px; cursor:pointer; }
     button:hover { background:#1d4ed8; }
-    .result { font-size:16px; line-height:1.5; }
-    .total { font-size:20px; font-weight:bold; margin-top:8px; }
     .checkbox { display:flex; align-items:center; gap:8px; }
-    a { display:block; margin-top:12px; text-align:center; text-decoration:none; color:#2563eb; font-weight:bold; }
   </style>
 </head>
 <body>
@@ -56,18 +53,12 @@
 <div class="card">
   <h2>🧰 Опалубка</h2>
   <div class="checkbox">
-    <input id="formwork" type="checkbox" />
-    <label for="formwork">Аренда опалубки (1000 ₽ / м³)</label>
+    <input id="formwork" type="checkbox" checked />
+    <label for="formwork">Взять в аренду опалубку (1000 ₽ / м³)</label>
   </div>
 </div>
 
 <button onclick="calc()">Рассчитать</button>
-
-<div class="card" id="output" style="display:none;">
-  <h2>📊 Итог</h2>
-  <div class="result" id="res"></div>
-  <a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank">👉 Бригады и техника в Max</a>
-</div>
 
 <script>
 function calc(){
@@ -83,12 +74,13 @@ function calc(){
   const volume = volumeMain + volumePart;
 
   const concreteCost = volume * priceConcrete;
-
   const gravelVolume = (p * w + part * pw) * 0.3;
   const gravelCost = gravelVolume * 250;
 
   const rebarMeters = (p + part) * 8;
   const rebarCost = rebarMeters * 46;
+
+  const formworkCost = formwork.checked ? volume * 1000 : 0;
 
   const workTrench = (p + part) * 200;
   const workGravel = (p + part) * 350;
@@ -96,23 +88,39 @@ function calc(){
   const workRebar = rebarMeters * 35;
   const workFormworkTransport = formwork.checked ? 4000 : 0;
 
-  const formworkCost = formwork.checked ? volume * 1000 : 0;
+  const materialsTotal = concreteCost + gravelCost + rebarCost + formworkCost;
+  const worksTotal = workTrench + workGravel + workConcrete + workRebar + workFormworkTransport;
 
-  const materials = concreteCost + gravelCost + rebarCost + formworkCost;
-  const works = workTrench + workGravel + workConcrete + workRebar + workFormworkTransport;
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html><head><title>Расчёт фундамента</title>
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <style>
+      body{font-family:Arial;padding:16px;line-height:1.5}
+      h2{margin-top:0}
+      .total{font-size:20px;font-weight:bold;margin-top:12px}
+      a{display:block;margin-top:16px;font-size:18px;font-weight:bold;text-decoration:none;color:#2563eb}
+    </style></head><body>
 
-  res.innerHTML = `
-    <b>Материалы:</b><br>
+    <h2>🧱 Материалы</h2>
     Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toLocaleString()} ₽<br>
     Подсыпка: ${gravelCost.toLocaleString()} ₽<br>
     Арматура: ${rebarCost.toLocaleString()} ₽<br>
     ${formwork.checked ? 'Опалубка: ' + formworkCost.toLocaleString() + ' ₽<br>' : ''}
-    <br><b>Работы:</b><br>
-    ${works.toLocaleString()} ₽
-    <div class="total">Итого: ${(materials + works).toLocaleString()} ₽</div>
-  `;
 
-  output.style.display = 'block';
+    <h2>🚜 Работы</h2>
+    Копка траншеи: ${workTrench.toLocaleString()} ₽<br>
+    Подсыпка: ${workGravel.toLocaleString()} ₽<br>
+    Заливка бетона: ${workConcrete.toLocaleString()} ₽<br>
+    Вязка арматуры: ${workRebar.toLocaleString()} ₽<br>
+    ${formwork.checked ? 'Транспортировка опалубки: ' + workFormworkTransport.toLocaleString() + ' ₽<br>' : ''}
+
+    <div class="total">Итого: ${(materialsTotal + worksTotal).toLocaleString()} ₽</div>
+
+    <a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank">👉 Взять в аренду опалубку</a>
+
+    </body></html>
+  `);
 }
 </script>
 
