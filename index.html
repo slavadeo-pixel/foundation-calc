@@ -26,39 +26,61 @@
       margin-bottom: 12px;
       box-shadow: 0 4px 14px rgba(0,0,0,.08);
     }
-    h2 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-    label {
-      font-size: 14px;
-      margin-top: 10px;
-      display: block;
-    }
+    h2 { margin: 0 0 8px; font-size: 18px; }
+    label { font-size: 14px; margin-top: 10px; display: block; }
     input, select {
-      width: 100%;
-      margin-top: 6px;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: 1px solid #ddd;
+      width: 100%; margin-top: 6px; padding: 12px; font-size: 16px;
+      border-radius: 12px; border: 1px solid #ddd;
     }
+    .checkbox { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
     button {
+      width: 100%; padding: 16px; font-size: 18px; border-radius: 16px;
+      border: none; background: #2563eb; color: #fff; font-weight: 600;
+    }
+
+    /* Экран результатов */
+    .result-screen {
+      position: fixed;
+      inset: 0;
+      background: #f2f2f2;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .screen {
       width: 100%;
+      height: 100%;
+      max-width: 520px;
+      background: #fff;
       padding: 16px;
+      overflow-y: auto;
+    }
+    .line { margin-bottom: 8px; font-size: 16px; }
+    .block { margin-top: 16px; }
+    .total { margin-top: 16px; font-size: 22px; font-weight: 700; }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111;
+      margin-top: 12px;
+    }
+    a.action {
+      display: block;
+      margin-top: 20px;
+      padding: 16px;
+      text-align: center;
       font-size: 18px;
+      font-weight: 600;
       border-radius: 16px;
-      border: none;
       background: #2563eb;
       color: #fff;
-      font-weight: 600;
+      text-decoration: none;
     }
-    button:active { opacity: .9; }
   </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="calcScreen">
 
   <div class="card">
     <h2>📐 Параметры фундамента</h2>
@@ -82,10 +104,15 @@
       <option value="0.3">0.3 м</option>
       <option value="0.4">0.4 м</option>
     </select>
+
+    <div class="checkbox">
+      <input id="formwork" type="checkbox" checked />
+      <label for="formwork">Аренда металлической опалубки</label>
+    </div>
   </div>
 
   <div class="card">
-    <h2>🧱 Бетон</h2>
+    <h2>🚚 Бетон</h2>
     <select id="concrete">
       <option value="5500">M200 — 5 500 ₽ / м³</option>
       <option value="6000">M250 — 6 000 ₽ / м³</option>
@@ -94,7 +121,11 @@
   </div>
 
   <button onclick="calc()">Рассчитать стоимость</button>
+</div>
 
+<!-- Экран результатов -->
+<div class="result-screen" id="resultScreen">
+  <div class="screen" id="resultContent"></div>
 </div>
 
 <script>
@@ -111,49 +142,47 @@ function calc(){
   const gravelCost = (p*w + part*pw) * 0.3 * 250;
   const rebarMeters = (p + part) * 8;
   const rebarCost = rebarMeters * 46;
+  const formworkCost = formwork.checked ? volume * 1000 : 0;
 
   const workTrench = (p + part) * 200;
   const workGravel = (p + part) * 350;
   const workConcrete = volume * 2500;
   const workRebar = rebarMeters * 35;
 
-  const total = concreteCost + gravelCost + rebarCost + workTrench + workGravel + workConcrete + workRebar;
+  const materialsTotal = concreteCost + gravelCost + rebarCost + formworkCost;
+  const worksTotal = workTrench + workGravel + workConcrete + workRebar;
+  const total = materialsTotal + worksTotal;
 
-  const win = window.open('', '_blank');
-  win.document.write(`
-  <!DOCTYPE html><html><head>
-  <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
-  <title>Расчёт фундамента</title>
-  <style>
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;width:100%;height:100%}
-    body{display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;background:#f2f2f2;color:#111}
-    .screen{width:100%;height:100%;max-width:520px;background:#fff;padding:16px;overflow-y:auto}
-    h2{margin:0 0 12px;font-size:20px}
-    .line{margin-bottom:8px;font-size:16px}
-    .total{margin-top:16px;font-size:22px;font-weight:700}
-    a{display:block;margin-top:24px;padding:16px;text-align:center;font-size:18px;font-weight:600;border-radius:16px;background:#2563eb;color:#fff;text-decoration:none}
-  </style>
-  </head><body>
-    <div class='screen'>
-      <h2>📊 Расчёт фундамента</h2>
+  resultContent.innerHTML = `
+    <h2>📊 Материалы</h2>
+    <div class='line'>🚚 Бетон: ${concreteCost.toLocaleString()} ₽</div>
+    <div class='line'>Подсыпка: ${gravelCost.toLocaleString()} ₽</div>
+    <div class='line'>Арматура: ${rebarCost.toLocaleString()} ₽</div>
+    ${formwork.checked ? `<div class='line'>Опалубка (весь объект): ${formworkCost.toLocaleString()} ₽</div>` : ``}
+    <div class='line'><b>Итого материалы:</b> ${materialsTotal.toLocaleString()} ₽</div>
 
-      <div class='line'>Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toLocaleString()} ₽</div>
-      <div class='line'>Подсыпка: ${gravelCost.toLocaleString()} ₽</div>
-      <div class='line'>Арматура: ${rebarCost.toLocaleString()} ₽</div>
-
+    <div class='block'>
       <h2>🚜 Работы</h2>
       <div class='line'>Копка траншеи: ${workTrench.toLocaleString()} ₽</div>
       <div class='line'>Подсыпка: ${workGravel.toLocaleString()} ₽</div>
-      <div class='line'>Заливка бетона: ${workConcrete.toLocaleString()} ₽</div>
       <div class='line'>Вязка арматуры: ${workRebar.toLocaleString()} ₽</div>
-
-      <div class='total'>Итого: ${total.toLocaleString()} ₽</div>
-
-      <a href='https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw' target='_blank'>👉 Консультация в Max</a>
+      <div class='line'>Заливка бетона: ${workConcrete.toLocaleString()} ₽</div>
+      <div class='line'><b>Итого работы:</b> ${worksTotal.toLocaleString()} ₽</div>
     </div>
-  </body></html>`);
+
+    <div class='total'>ИТОГО ЗА ФУНДАМЕНТ: ${total.toLocaleString()} ₽</div>
+
+    <a class='action' href='https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw' target='_blank'>👉 Консультация в Max</a>
+    <button class='btn-secondary' onclick='closeResult()'>⬅ Назад к расчёту</button>
+  `;
+
+  document.getElementById('calcScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'flex';
+}
+
+function closeResult(){
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('calcScreen').style.display = 'block';
 }
 </script>
 
