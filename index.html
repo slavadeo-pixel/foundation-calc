@@ -2,63 +2,100 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Калькулятор ленточного фундамента</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Калькулятор фундамента</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:16px; }
-    .card { background:#fff; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
-    h2 { margin-top:0; font-size:20px; }
-    label { display:block; margin:8px 0 4px; }
-    input, select { width:100%; padding:8px; font-size:16px; }
-    button { width:100%; padding:12px; font-size:18px; background:#2563eb; color:#fff; border:none; border-radius:10px; cursor:pointer; }
-    button:hover { background:#1d4ed8; }
-    .checkbox { display:flex; align-items:center; gap:8px; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f2f2f2;
+      color: #111;
+    }
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.08);
+    }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    label {
+      font-size: 14px;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select {
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      border-radius: 16px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 600;
+    }
+    button:active { opacity: .9; }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <h2>📐 Геометрия фундамента</h2>
-  <label>Периметр фундамента (м)</label>
-  <input id="perimeter" type="number" />
+<div class="container">
 
-  <label>Ширина ленты</label>
-  <select id="width">
-    <option value="0.3">0.3 м</option>
-    <option value="0.4">0.4 м</option>
-  </select>
+  <div class="card">
+    <h2>📐 Параметры фундамента</h2>
+    <label>Периметр фундамента, м</label>
+    <input id="perimeter" type="number" inputmode="decimal" />
 
-  <label>Высота ленты (м)</label>
-  <input id="height" type="number" />
+    <label>Ширина ленты</label>
+    <select id="width">
+      <option value="0.3">0.3 м</option>
+      <option value="0.4">0.4 м</option>
+    </select>
 
-  <label>Длина внутренних перегородок (м)</label>
-  <input id="partitions" type="number" />
+    <label>Высота ленты, м</label>
+    <input id="height" type="number" inputmode="decimal" />
 
-  <label>Ширина перегородок</label>
-  <select id="partWidth">
-    <option value="0.3">0.3 м</option>
-    <option value="0.4">0.4 м</option>
-  </select>
-</div>
+    <label>Длина внутренних перегородок, м</label>
+    <input id="partitions" type="number" inputmode="decimal" />
 
-<div class="card">
-  <h2>🧱 Бетон</h2>
-  <select id="concrete">
-    <option value="5500">M200 — 5 500 ₽ / м³</option>
-    <option value="6000">M250 — 6 000 ₽ / м³</option>
-    <option value="6500">M300 — 6 500 ₽ / м³</option>
-  </select>
-</div>
-
-<div class="card">
-  <h2>🧰 Опалубка</h2>
-  <div class="checkbox">
-    <input id="formwork" type="checkbox" checked />
-    <label for="formwork">Взять в аренду опалубку (1000 ₽ / м³)</label>
+    <label>Ширина перегородок</label>
+    <select id="partWidth">
+      <option value="0.3">0.3 м</option>
+      <option value="0.4">0.4 м</option>
+    </select>
   </div>
-</div>
 
-<button onclick="calc()">Рассчитать</button>
+  <div class="card">
+    <h2>🧱 Бетон</h2>
+    <select id="concrete">
+      <option value="5500">M200 — 5 500 ₽ / м³</option>
+      <option value="6000">M250 — 6 000 ₽ / м³</option>
+      <option value="6500">M300 — 6 500 ₽ / м³</option>
+    </select>
+  </div>
+
+  <button onclick="calc()">Рассчитать стоимость</button>
+
+</div>
 
 <script>
 function calc(){
@@ -69,58 +106,52 @@ function calc(){
   const pw = +partWidth.value;
   const priceConcrete = +concrete.value;
 
-  const volumeMain = p * w * h;
-  const volumePart = part * pw * h;
-  const volume = volumeMain + volumePart;
-
+  const volume = p*w*h + part*pw*h;
   const concreteCost = volume * priceConcrete;
-  const gravelVolume = (p * w + part * pw) * 0.3;
-  const gravelCost = gravelVolume * 250;
-
+  const gravelCost = (p*w + part*pw) * 0.3 * 250;
   const rebarMeters = (p + part) * 8;
   const rebarCost = rebarMeters * 46;
-
-  const formworkCost = formwork.checked ? volume * 1000 : 0;
 
   const workTrench = (p + part) * 200;
   const workGravel = (p + part) * 350;
   const workConcrete = volume * 2500;
   const workRebar = rebarMeters * 35;
-  const workFormworkTransport = formwork.checked ? 4000 : 0;
 
-  const materialsTotal = concreteCost + gravelCost + rebarCost + formworkCost;
-  const worksTotal = workTrench + workGravel + workConcrete + workRebar + workFormworkTransport;
+  const total = concreteCost + gravelCost + rebarCost + workTrench + workGravel + workConcrete + workRebar;
 
   const win = window.open('', '_blank');
   win.document.write(`
-    <html><head><title>Расчёт фундамента</title>
-    <meta name=viewport content="width=device-width, initial-scale=1.0">
-    <style>
-      body{font-family:Arial;padding:16px;line-height:1.5}
-      h2{margin-top:0}
-      .total{font-size:20px;font-weight:bold;margin-top:12px}
-      a{display:block;margin-top:16px;font-size:18px;font-weight:bold;text-decoration:none;color:#2563eb}
-    </style></head><body>
+  <!DOCTYPE html><html><head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Расчёт фундамента</title>
+  <style>
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;background:#fff;color:#111}
+    .wrap{padding:16px}
+    h2{margin:0 0 12px;font-size:20px}
+    .line{margin-bottom:8px;font-size:16px}
+    .total{margin-top:16px;font-size:22px;font-weight:700}
+    a{display:block;margin-top:24px;padding:16px;text-align:center;font-size:18px;font-weight:600;border-radius:16px;background:#2563eb;color:#fff;text-decoration:none}
+  </style>
+  </head><body>
+  <div class='wrap'>
+    <h2>📊 Расчёт фундамента</h2>
 
-    <h2>🧱 Материалы</h2>
-    Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toLocaleString()} ₽<br>
-    Подсыпка: ${gravelCost.toLocaleString()} ₽<br>
-    Арматура: ${rebarCost.toLocaleString()} ₽<br>
-    ${formwork.checked ? 'Опалубка: ' + formworkCost.toLocaleString() + ' ₽<br>' : ''}
+    <div class='line'>Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toLocaleString()} ₽</div>
+    <div class='line'>Подсыпка: ${gravelCost.toLocaleString()} ₽</div>
+    <div class='line'>Арматура: ${rebarCost.toLocaleString()} ₽</div>
 
     <h2>🚜 Работы</h2>
-    Копка траншеи: ${workTrench.toLocaleString()} ₽<br>
-    Подсыпка: ${workGravel.toLocaleString()} ₽<br>
-    Заливка бетона: ${workConcrete.toLocaleString()} ₽<br>
-    Вязка арматуры: ${workRebar.toLocaleString()} ₽<br>
-    ${formwork.checked ? 'Транспортировка опалубки: ' + workFormworkTransport.toLocaleString() + ' ₽<br>' : ''}
+    <div class='line'>Копка траншеи: ${workTrench.toLocaleString()} ₽</div>
+    <div class='line'>Подсыпка: ${workGravel.toLocaleString()} ₽</div>
+    <div class='line'>Заливка бетона: ${workConcrete.toLocaleString()} ₽</div>
+    <div class='line'>Вязка арматуры: ${workRebar.toLocaleString()} ₽</div>
 
-    <div class="total">Итого: ${(materialsTotal + worksTotal).toLocaleString()} ₽</div>
+    <div class='total'>Итого: ${total.toLocaleString()} ₽</div>
 
-    <a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank">👉 Взять в аренду опалубку</a>
-
-    </body></html>
-  `);
+    <a href='https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw' target='_blank'>👉 Консультация в Max</a>
+  </div>
+  </body></html>`);
 }
 </script>
 
