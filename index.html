@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -147,7 +147,7 @@ function calc(){
 
   const rebarMeters = (p + part) * 8;
   const rebarCost = rebarMeters * 46;
-  const rebarFrames = rebarMeters * 4; // 4 каркаса на погонный метр
+  const rebarFrames = (p + part) * 4; // 4 каркаса на погонный метр фундамента
   const rebarFramesCost = rebarFrames * 50;
 
   const formworkCost = formwork.checked ? volume * 1000 : 0;
@@ -181,8 +181,8 @@ function calc(){
       <h2>🚜 Работы</h2>
       <div class='line'>Копка траншеи: ${workTrench.toLocaleString()} ₽</div>
       <div class='line'>Подсыпка: ${workGravel.toLocaleString()} ₽</div>
-      <div class='line'>Вязка арматуры: ${workRebar.toLocaleString()} ₽</div>
-      <div class='line'>Заливка бетона: ${workConcrete.toLocaleString()} ₽</div>
+      <div class='line'>Сборка каркасов арматуры: ${workRebar.toLocaleString()} ₽</div>
+      <div class='line'>Сборка опалубки и приём бетона: ${workConcrete.toLocaleString()} ₽</div>
       <div class='line'><b>Итого работы:</b> ${worksTotal.toLocaleString()} ₽</div>
     </div>
 
