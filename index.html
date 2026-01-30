@@ -1,80 +1,120 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Калькулятор ленточного фундамента</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-body{background:#f2f2f2;display:flex;justify-content:center;align-items:center;min-height:100vh}
-.container{max-width:520px;width:100%;background:#fff;padding:16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-h1{text-align:center;font-size:20px;margin-bottom:10px}
-label{display:block;margin-top:12px;font-weight:600;font-size:14px}
-input,select{width:100%;padding:12px;margin-top:6px;font-size:16px;border-radius:8px;border:1px solid #ccc}
-button{margin-top:16px;width:100%;padding:16px;font-size:18px;background:#27ae60;color:#fff;border:none;border-radius:12px;cursor:pointer}
-button:active{transform:scale(0.98)}
-.result{position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;padding:20px;display:none;overflow-y:auto;z-index:1000;text-align:center}
-.result.show{display:block}
-.max-btn{display:block;margin-top:20px;padding:16px;background:#4a7cff;color:#fff;text-decoration:none;border-radius:12px;font-size:18px}
-.note{font-size:12px;color:#777;margin-top:8px;text-align:center}
-.checkbox{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:14px;font-weight:600}
-.checkbox input{width:auto}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Калькулятор ленточного фундамента</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:16px; }
+    .card { background:#fff; border-radius:12px; padding:16px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+    h2 { margin-top:0; font-size:20px; }
+    label { display:block; margin:8px 0 4px; }
+    input, select { width:100%; padding:8px; font-size:16px; }
+    button { width:100%; padding:12px; font-size:18px; background:#2563eb; color:#fff; border:none; border-radius:10px; cursor:pointer; }
+    button:hover { background:#1d4ed8; }
+    .result { font-size:16px; line-height:1.5; }
+    .total { font-size:20px; font-weight:bold; margin-top:8px; }
+    .checkbox { display:flex; align-items:center; gap:8px; }
+    a { display:block; margin-top:12px; text-align:center; text-decoration:none; color:#2563eb; font-weight:bold; }
+  </style>
 </head>
 <body>
 
-<div class="container" id="mainContainer">
-<h1>Калькулятор ленточного фундамента</h1>
+<div class="card">
+  <h2>📐 Геометрия фундамента</h2>
+  <label>Периметр фундамента (м)</label>
+  <input id="perimeter" type="number" />
 
-<label>Периметр фундамента (м)<input id="perimeter" type="number" step="0.1"></label>
-<label>Ширина ленты (м)<select id="width"><option value="0.3">0.3</option><option value="0.4" selected>0.4</option></select></label>
-<label>Высота ленты (м)<input id="height" type="number" step="0.1"></label>
-<label>Длина перегородок (м)<input id="partitionLength" type="number" step="0.1" value="0"></label>
-<label>Ширина перегородок (м)<select id="partitionWidth"><option value="0.3">0.3</option><option value="0.4" selected>0.4</option></select></label>
-<label>Марка бетона<select id="concrete"><option value="5500">M200 — 5500</option><option value="6000">M250 — 6000</option><option value="6500">M300 — 6500</option></select></label>
-<label class="checkbox"><input type="checkbox" id="formwork" checked>Аренда опалубки (400 ₽/м)</label>
-<button id="calcButton">Рассчитать</button>
-<div class="note">* Расчёт ориентировочный</div>
+  <label>Ширина ленты</label>
+  <select id="width">
+    <option value="0.3">0.3 м</option>
+    <option value="0.4">0.4 м</option>
+  </select>
+
+  <label>Высота ленты (м)</label>
+  <input id="height" type="number" />
+
+  <label>Длина внутренних перегородок (м)</label>
+  <input id="partitions" type="number" />
+
+  <label>Ширина перегородок</label>
+  <select id="partWidth">
+    <option value="0.3">0.3 м</option>
+    <option value="0.4">0.4 м</option>
+  </select>
 </div>
 
-<div class="result" id="result"></div>
+<div class="card">
+  <h2>🧱 Бетон</h2>
+  <select id="concrete">
+    <option value="5500">M200 — 5 500 ₽ / м³</option>
+    <option value="6000">M250 — 6 000 ₽ / м³</option>
+    <option value="6500">M300 — 6 500 ₽ / м³</option>
+  </select>
+</div>
+
+<div class="card">
+  <h2>🧰 Опалубка</h2>
+  <div class="checkbox">
+    <input id="formwork" type="checkbox" />
+    <label for="formwork">Аренда опалубки (1000 ₽ / м³)</label>
+  </div>
+</div>
+
+<button onclick="calc()">Рассчитать</button>
+
+<div class="card" id="output" style="display:none;">
+  <h2>📊 Итог</h2>
+  <div class="result" id="res"></div>
+  <a href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank">👉 Бригады и техника в Max</a>
+</div>
 
 <script>
-function calcAll(){
-  const P=+document.getElementById('perimeter').value;
-  const W=+document.getElementById('width').value;
-  const H=+document.getElementById('height').value;
-  const pL=+document.getElementById('partitionLength').value;
-  const pW=+document.getElementById('partitionWidth').value;
-  const concretePrice=+document.getElementById('concrete').value;
-  const formworkChecked=document.getElementById('formwork').checked;
+function calc(){
+  const p = +perimeter.value || 0;
+  const w = +width.value;
+  const h = +height.value || 0;
+  const part = +partitions.value || 0;
+  const pw = +partWidth.value;
+  const priceConcrete = +concrete.value;
 
-  if(!P||!H){alert('Заполните все поля');return;}
+  const volumeMain = p * w * h;
+  const volumePart = part * pw * h;
+  const volume = volumeMain + volumePart;
 
-  const volume=P*W*H + pL*pW*H;
-  const concreteCost=volume*concretePrice;
-  const gravelCost=(P*W+pL*pW)*0.3*250;
-  const rebarCost=(P+pL)*8*46;
-  const workCost=volume*2500 + (P+pL)*200 + (P+pL)*350 + (P+pL)*8*35 + (formworkChecked?400*(P+pL):0) + 4000;
+  const concreteCost = volume * priceConcrete;
 
-  const result=document.getElementById('result');
-  result.innerHTML=`<h2>Результаты расчёта</h2>
-  <p>Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toFixed(0)} ₽</p>
-  <p>Подсыпка: ${gravelCost.toFixed(0)} ₽</p>
-  <p>Арматура: ${rebarCost.toFixed(0)} ₽</p>
-  <p><b>Стоимость работ: ${workCost.toFixed(0)} ₽</b></p>
-  <a class="max-btn" href="https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw" target="_blank">👷 Бригады и техника в Max</a>
-  <br><button onclick="closeResult()">Назад</button>`;
-  result.classList.add('show');
-  document.getElementById('mainContainer').style.display='none';
+  const gravelVolume = (p * w + part * pw) * 0.3;
+  const gravelCost = gravelVolume * 250;
+
+  const rebarMeters = (p + part) * 8;
+  const rebarCost = rebarMeters * 46;
+
+  const workTrench = (p + part) * 200;
+  const workGravel = (p + part) * 350;
+  const workConcrete = volume * 2500;
+  const workRebar = rebarMeters * 35;
+  const workFormworkTransport = formwork.checked ? 4000 : 0;
+
+  const formworkCost = formwork.checked ? volume * 1000 : 0;
+
+  const materials = concreteCost + gravelCost + rebarCost + formworkCost;
+  const works = workTrench + workGravel + workConcrete + workRebar + workFormworkTransport;
+
+  res.innerHTML = `
+    <b>Материалы:</b><br>
+    Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toLocaleString()} ₽<br>
+    Подсыпка: ${gravelCost.toLocaleString()} ₽<br>
+    Арматура: ${rebarCost.toLocaleString()} ₽<br>
+    ${formwork.checked ? 'Опалубка: ' + formworkCost.toLocaleString() + ' ₽<br>' : ''}
+    <br><b>Работы:</b><br>
+    ${works.toLocaleString()} ₽
+    <div class="total">Итого: ${(materials + works).toLocaleString()} ₽</div>
+  `;
+
+  output.style.display = 'block';
 }
-
-function closeResult(){
-  document.getElementById('result').classList.remove('show');
-  document.getElementById('mainContainer').style.display='block';
-}
-
-// Привязка кнопок
-document.getElementById('calcButton').addEventListener('click', calcAll);
 </script>
+
 </body>
 </html>
