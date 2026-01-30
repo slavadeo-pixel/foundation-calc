@@ -54,7 +54,6 @@
       font-weight: 600;
     }
 
-    /* Экран результатов */
     .result-screen {
       position: fixed;
       inset: 0;
@@ -126,6 +125,13 @@
       <option value="0.4">0.4 м</option>
     </select>
 
+    <label>Марка бетона</label>
+    <select id="concreteGrade">
+      <option value="5500">M200 — 5 500 ₽ / м³</option>
+      <option value="6000">M250 — 6 000 ₽ / м³</option>
+      <option value="6500" selected>M300 — 6 500 ₽ / м³</option>
+    </select>
+
     <div class="checkbox">
       <input type="checkbox" id="formwork" checked />
       <label for="formwork">Аренда металлической опалубки</label>
@@ -146,12 +152,15 @@ function calculate(){
   const h = +height.value || 0;
   const w = +width.value || 0;
   const pw = +pwidth.value || 0;
+  const concretePrice = +concreteGrade.value;
 
-  const volume = p * w * h + part * pw * h;
+  const rawVolume = p * w * h + part * pw * h;
+  const volume = Math.ceil(rawVolume * 2) / 2; // бетон округляем до 0.5 м³ вверх
 
-  const concrete = volume * 6500;
+  const concrete = volume * concretePrice;
 
-  const gravelVol = p * w * 0.3 + part * pw * 0.3;
+  const rawGravelVol = p * w * 0.3 + part * pw * 0.3;
+  const gravelVol = Math.ceil(rawGravelVol); // подсыпка до целого м³ вверх
   const gravel = gravelVol * 250;
   const gravelDelivery = Math.ceil(gravelVol / 4) * 1500;
 
@@ -175,8 +184,8 @@ function calculate(){
 
   resultContent.innerHTML = `
     <h2>Материалы</h2>
-    <div class="line">🚚 Бетон: ${concrete.toLocaleString()} ₽</div>
-    <div class="line">🪨 Подсыпка: ${gravel.toLocaleString()} ₽</div>
+    <div class="line">🚚 Бетон: ${volume.toFixed(1)} м³ — ${concrete.toLocaleString()} ₽</div>
+    <div class="line">🪨 Гравийная подсыпка: ${gravelVol} м³ — ${gravel.toLocaleString()} ₽</div>
     <div class="line">🚚 Доставка подсыпки: ${gravelDelivery.toLocaleString()} ₽</div>
     <div class="line">🔩 Арматура: ${rebar.toLocaleString()} ₽</div>
     <div class="line">🧱 Каркасы арматуры: ${frames.toLocaleString()} ₽</div>
