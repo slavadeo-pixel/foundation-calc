@@ -84,22 +84,23 @@
 
   <div class="card">
     <h2>📐 Параметры фундамента</h2>
-    <label>Периметр фундамента, м</label>
-    <input id="perimeter" type="number" inputmode="decimal" />
 
-    <label>Ширина ленты</label>
+    <label>Периметр фундамента, м</label>
+    <input id="perimeter" type="text" placeholder="40 метров" onfocus="this.value=''" />
+
+    <label>Выбрать толщину ленты</label>
     <select id="width">
       <option value="0.3">0.3 м</option>
       <option value="0.4">0.4 м</option>
     </select>
 
     <label>Высота ленты, м</label>
-    <input id="height" type="number" inputmode="decimal" />
+    <input id="height" type="text" placeholder="0.5 метров" onfocus="this.value=''" />
 
     <label>Длина внутренних перегородок, м</label>
-    <input id="partitions" type="number" inputmode="decimal" />
+    <input id="partitions" type="text" placeholder="10 метров" onfocus="this.value=''" />
 
-    <label>Ширина перегородок</label>
+    <label>Выбрать толщину перегородок</label>
     <select id="partWidth">
       <option value="0.3">0.3 м</option>
       <option value="0.4">0.4 м</option>
@@ -130,10 +131,10 @@
 
 <script>
 function calc(){
-  const p = +perimeter.value || 0;
+  const p = parseFloat(perimeter.value) || 0;
   const w = +width.value;
-  const h = +height.value || 0;
-  const part = +partitions.value || 0;
+  const h = parseFloat(height.value) || 0;
+  const part = parseFloat(partitions.value) || 0;
   const pw = +partWidth.value;
   const priceConcrete = +concrete.value;
 
@@ -188,3 +189,4 @@ function closeResult(){
 
 </body>
 </html>
+
