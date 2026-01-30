@@ -123,34 +123,36 @@ function calc(){
   win.document.write(`
   <!DOCTYPE html><html><head>
   <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
   <title>Расчёт фундамента</title>
   <style>
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;background:#fff;color:#111}
-    .wrap{padding:16px}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;width:100%;height:100%}
+    body{display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;background:#f2f2f2;color:#111}
+    .screen{width:100%;height:100%;max-width:520px;background:#fff;padding:16px;overflow-y:auto}
     h2{margin:0 0 12px;font-size:20px}
     .line{margin-bottom:8px;font-size:16px}
     .total{margin-top:16px;font-size:22px;font-weight:700}
     a{display:block;margin-top:24px;padding:16px;text-align:center;font-size:18px;font-weight:600;border-radius:16px;background:#2563eb;color:#fff;text-decoration:none}
   </style>
   </head><body>
-  <div class='wrap'>
-    <h2>📊 Расчёт фундамента</h2>
+    <div class='screen'>
+      <h2>📊 Расчёт фундамента</h2>
 
-    <div class='line'>Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toLocaleString()} ₽</div>
-    <div class='line'>Подсыпка: ${gravelCost.toLocaleString()} ₽</div>
-    <div class='line'>Арматура: ${rebarCost.toLocaleString()} ₽</div>
+      <div class='line'>Бетон: ${volume.toFixed(2)} м³ — ${concreteCost.toLocaleString()} ₽</div>
+      <div class='line'>Подсыпка: ${gravelCost.toLocaleString()} ₽</div>
+      <div class='line'>Арматура: ${rebarCost.toLocaleString()} ₽</div>
 
-    <h2>🚜 Работы</h2>
-    <div class='line'>Копка траншеи: ${workTrench.toLocaleString()} ₽</div>
-    <div class='line'>Подсыпка: ${workGravel.toLocaleString()} ₽</div>
-    <div class='line'>Заливка бетона: ${workConcrete.toLocaleString()} ₽</div>
-    <div class='line'>Вязка арматуры: ${workRebar.toLocaleString()} ₽</div>
+      <h2>🚜 Работы</h2>
+      <div class='line'>Копка траншеи: ${workTrench.toLocaleString()} ₽</div>
+      <div class='line'>Подсыпка: ${workGravel.toLocaleString()} ₽</div>
+      <div class='line'>Заливка бетона: ${workConcrete.toLocaleString()} ₽</div>
+      <div class='line'>Вязка арматуры: ${workRebar.toLocaleString()} ₽</div>
 
-    <div class='total'>Итого: ${total.toLocaleString()} ₽</div>
+      <div class='total'>Итого: ${total.toLocaleString()} ₽</div>
 
-    <a href='https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw' target='_blank'>👉 Консультация в Max</a>
-  </div>
+      <a href='https://max.ru/join/ywAl4IILOviUMdpEWbk_OrjOFCN4c6q1GANv-omzGrw' target='_blank'>👉 Консультация в Max</a>
+    </div>
   </body></html>`);
 }
 </script>
